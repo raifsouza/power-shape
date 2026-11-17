@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "serve":"npm install serve --save",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:power-shape": "node dist/power-shape/server/server.mjs"
