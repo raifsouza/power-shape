@@ -37,7 +37,7 @@ import { WhatsappService } from '../../../../core/services/whatsapp.service';
       display: flex;
       align-items: center;
       padding-top: 6rem;
-      background-image: url('/assets/images/hero/hero-bg.webp');
+      background-image: url('/images/Fundo.jpg');
       background-size: cover;
       background-position: center;
       background-color: var(--color-background);

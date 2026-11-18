@@ -8,7 +8,7 @@ import { SITE_CONFIG } from '../../../../core/config/site-config';
     <footer class="footer">
       <div class="container footer-grid">
         <div class="footer-brand">
-          <img src="assets/images/logo/power-shape-logo.png" alt="Power Shape Academia" />
+          <img src="/icons/logotransparente.png" alt="Power Shape Academia" />
           <p>
             {{ config.academyName }} • Desde {{ config.foundedYear }}.<br />
             Musculação, performance e acompanhamento focado nos seus resultados.

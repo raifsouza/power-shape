@@ -208,10 +208,12 @@ export class AcademyGalleryComponent {
   selectedIndex = signal<number | null>(null);
 
   photos: GalleryPhoto[] = [
-    { src: 'assets/images/academy/area-musculacao.webp', alt: 'Área de musculação e pesos livres', caption: 'Área de Musculação & Pesos Livres' },
-    { src: 'assets/images/academy/equipamentos-1.webp', alt: 'Equipamentos articulados de alta carga', caption: 'Equipamentos Articulados' },
-    { src: 'assets/images/academy/area-cardio.webp', alt: 'Área de equipamentos cardiovasculares', caption: 'Espaço Cardio' },
-    { src: 'assets/images/academy/salao-geral.webp', alt: 'Visão geral do salão principal', caption: 'Salão Principal' }
+    { src: '/images/pesosLivres.jpeg', alt: 'Área de musculação e pesos livres', caption: 'Área de Musculação & Pesos Livres' },
+    { src: '/images/areadeSuperiores.jpeg', alt: 'Equipamentos articulados de alta carga', caption: 'Área de Musculação Superiores' },
+    { src: '/images/areadeInferiores.jpeg', alt: 'Equipamentos articulados de alta carga', caption: 'Área de Musculação Inferiores' },
+    { src: '/images/cardio.jpeg', alt: 'Área de equipamentos cardiovasculares', caption: 'Espaço Cardio' },
+    { src: '/images/cardio2.jpeg', alt: 'Área de equipamentos cardiovasculares', caption: 'Espaço Cardio' },
+    { src: '/images/salaoPrincipal.jpeg', alt: 'Visão geral do salão principal', caption: 'Salão Principal' }
   ];
 
   get currentPhoto(): GalleryPhoto | null {

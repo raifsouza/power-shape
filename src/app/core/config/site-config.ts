@@ -15,6 +15,12 @@ export const SITE_CONFIG = {
     googleMapsLink: 'https://maps.app.goo.gl/fBindvK9gco7Hw2v6',
     googleMapsEmbedUrl: '' // Inserir URL do iframe do Google Maps quando disponível
   },
+  // Dentro de SITE_CONFIG:
+  googleReviews: {
+    placeId: 'ChIJYzl-f_iLpJIRkVOk-C_BPS4',
+    apiKey: 'AIzaSyDc6aUbHoSUwfGtYx8oseQD7K4tmP5htnc',
+    googleProfileUrl: 'https://maps.app.goo.gl/fBindvK9gco7Hw2v6'
+  },
   businessHours: [
     { days: 'Segunda a Sexta', hours: '06:00 às 23:00' },
     { days: 'Sábado', hours: '07:00 às 12:00' },

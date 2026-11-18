@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTitleComponent } from '../../../../shared/components/section-title.component';
-import { TESTIMONIALS_DATA } from '../../data/testimonials.data';
+import { GoogleReviewsService } from '../../../../core/services/google-reviews.service';
+import { Testimonial } from '../../../../shared/models/testimonial.model';
+import { SITE_CONFIG } from '../../../../core/config/site-config';
 
 @Component({
   selector: 'app-testimonials',
@@ -11,19 +13,42 @@ import { TESTIMONIALS_DATA } from '../../data/testimonials.data';
     <section id="depoimentos" class="testimonials">
       <div class="container">
         <app-section-title
-          eyebrow="Avaliações"
+          eyebrow="Avaliações no Google"
           title="O Que Nossos Alunos Dizem"
+          subtitle="Avaliações reais de quem treina na Power Shape Academia."
         ></app-section-title>
 
         <div class="testimonials-grid">
-          <blockquote class="testimonial-card" *ngFor="let item of testimonials">
-            <div class="stars" aria-label="5 estrelas">★★★★★</div>
+          <blockquote class="testimonial-card" *ngFor="let item of testimonials()">
+            <div class="card-top">
+              <div class="stars" [attr.aria-label]="getRating(item) + ' estrelas'">
+                {{ getStars(getRating(item)) }}
+              </div>
+              <span class="google-badge">Google</span>
+            </div>
+
             <p>"{{ item.text }}"</p>
+
             <footer>
-              <strong>{{ item.studentName }}</strong>
-              <span *ngIf="item.resultTimeframe">{{ item.resultTimeframe }}</span>
+              <img
+                *ngIf="item.avatarUrl"
+                [src]="item.avatarUrl"
+                [alt]="item.studentName"
+                class="avatar"
+                referrerpolicy="no-referrer"
+              />
+              <div>
+                <strong>{{ item.studentName }}</strong>
+                <span *ngIf="item.resultTimeframe">{{ item.resultTimeframe }}</span>
+              </div>
             </footer>
           </blockquote>
+        </div>
+
+        <div class="google-cta" *ngIf="googleProfileUrl">
+          <a [href]="googleProfileUrl" target="_blank" rel="noopener noreferrer">
+            Ver todas as avaliações no Google →
+          </a>
         </div>
       </div>
     </section>
@@ -48,10 +73,27 @@ import { TESTIMONIALS_DATA } from '../../data/testimonials.data';
       flex-direction: column;
       justify-content: space-between;
 
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
       .stars {
         color: var(--color-primary);
-        letter-spacing: 0.15em;
-        margin-bottom: 1rem;
+        letter-spacing: 0.12em;
+      }
+
+      .google-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-surface-light);
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
       }
 
       p {
@@ -61,8 +103,18 @@ import { TESTIMONIALS_DATA } from '../../data/testimonials.data';
       }
 
       footer {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
         border-top: 1px solid var(--color-surface-light);
         padding-top: 1rem;
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
 
         strong {
           display: block;
@@ -77,8 +129,42 @@ import { TESTIMONIALS_DATA } from '../../data/testimonials.data';
         }
       }
     }
+
+    .google-cta {
+      margin-top: 2.25rem;
+      text-align: center;
+
+      a {
+        color: var(--color-primary);
+        font-family: var(--font-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.95rem;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
   `]
 })
-export class TestimonialsComponent {
-  testimonials = TESTIMONIALS_DATA;
+export class TestimonialsComponent implements OnInit {
+  private readonly googleReviewsService = inject(GoogleReviewsService);
+
+  testimonials = signal<Testimonial[]>([]);
+  googleProfileUrl = SITE_CONFIG.googleReviews.googleProfileUrl;
+
+  ngOnInit(): void {
+    this.googleReviewsService.getTopReviews().subscribe(data => {
+      this.testimonials.set(data);
+    });
+  }
+
+  getRating(item: Testimonial): number {
+    return (item as Testimonial & { rating?: number }).rating ?? 5;
+  }
+
+  getStars(rating: number): string {
+    return '★'.repeat(Math.round(rating));
+  }
 }
