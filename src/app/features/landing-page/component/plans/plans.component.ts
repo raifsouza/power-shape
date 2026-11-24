@@ -4,6 +4,7 @@ import { SectionTitleComponent } from '../../../../shared/components/section-tit
 import { PrimaryButtonComponent } from '../../../../shared/components/primary-button.component';
 import { PLANS_DATA } from '../../data/plans.data';
 import { WhatsappService } from '../../../../core/services/whatsapp.service';
+import { AnalyticsService } from '../../../../core/services/analytics.service';
 
 @Component({
   selector: 'app-plans',
@@ -48,7 +49,7 @@ import { WhatsappService } from '../../../../core/services/whatsapp.service';
             <app-primary-button
               [variant]="plan.highlighted ? 'solid' : 'outline'"
               [fullWidth]="true"
-              (clicked)="selectPlan(plan.name)"
+              (clicked)="selectPlan(plan.name, plan.price)"
             >
               Quero Este Plano
             </app-primary-button>
@@ -224,9 +225,12 @@ import { WhatsappService } from '../../../../core/services/whatsapp.service';
 })
 export class PlansComponent {
   private readonly whatsappService = inject(WhatsappService);
+  private readonly analytics = inject(AnalyticsService);
   plans = PLANS_DATA;
 
-  selectPlan(planName: string): void {
+  selectPlan(planName: string, PlanPrice: string): void {
+    this.analytics.trackPlanClick(planName, PlanPrice);
+    this.whatsappService.openPlanInquiry(planName);
     this.whatsappService.openPlanInquiry(planName);
   }
 }

@@ -2,7 +2,7 @@ import { Component, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimaryButtonComponent } from '../../../shared/components/primary-button.component';
 import { WhatsappService } from '../../../core/services/whatsapp.service';
-
+import { TrialModalService } from '../../../core/services/trial-modal.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -178,8 +178,7 @@ import { WhatsappService } from '../../../core/services/whatsapp.service';
   `]
 })
 export class HeaderComponent {
-  private readonly whatsappService = inject(WhatsappService);
-
+  private readonly trialModal = inject(TrialModalService);
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
 
@@ -207,6 +206,6 @@ export class HeaderComponent {
 
   onEnrollClick(): void {
     this.closeMenu();
-    this.whatsappService.openGeneralContact();
+    this.trialModal.open('Musculação')
   }
 }

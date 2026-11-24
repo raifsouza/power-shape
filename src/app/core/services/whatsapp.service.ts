@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { SITE_CONFIG } from '../config/site-config';
+import { TrialBookingPayload } from '../../shared/models/trial-booking.model';
 
-export interface InterestFormPayload {
+export interface ContactFormSubmission {
   name: string;
   phone: string;
   planName: string;
@@ -12,34 +14,53 @@ export interface InterestFormPayload {
   providedIn: 'root'
 })
 export class WhatsappService {
-  private readonly baseUrl = `https://wa.me/${SITE_CONFIG.whatsappNumber}`;
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly baseUrl = 'https://wa.me';
 
-  buildUrl(message: string): string {
-    return `${this.baseUrl}?text=${encodeURIComponent(message)}`;
-  }
-
-  openGeneralContact(): void {
-    window.open(this.buildUrl(SITE_CONFIG.defaultWhatsappMessage), '_blank', 'noopener,noreferrer');
+  openGeneralContact(customMessage?: string): void {
+    const message = customMessage ?? SITE_CONFIG.defaultWhatsappMessage;
+    this.openUrl(message);
   }
 
   openPlanInquiry(planName: string): void {
-    const message = `Olá! Tenho interesse no plano *${planName}* da Power Shape. Poderiam me enviar mais informações?`;
-    window.open(this.buildUrl(message), '_blank', 'noopener,noreferrer');
+    const message = `Olá! Vim pelo site da Power Shape Academia e tenho interesse no *${planName}*. Gostaria de mais informações.`;
+    this.openUrl(message);
   }
 
-  openFormSubmission(payload: InterestFormPayload): void {
+  openFormSubmission(data: ContactFormSubmission): void {
     const lines = [
-      `Olá! Gostaria de solicitar informações de matrícula na *Power Shape Academia*.`,
-      ``,
-      `*Nome:* ${payload.name}`,
-      `*Telefone:* ${payload.phone}`,
-      `*Plano de interesse:* ${payload.planName}`
-    ];
+      'Olá! Vim pelo site da *Power Shape Academia* e solicito atendimento:',
+      '',
+      `• *Nome:* ${data.name}`,
+      `• *Telefone/WhatsApp:* ${data.phone}`,
+      `• *Plano de interesse:* ${data.planName}`,
+      data.message?.trim() ? `• *Mensagem:* ${data.message.trim()}` : ''
+    ].filter(Boolean);
 
-    if (payload.message?.trim()) {
-      lines.push(`*Observação:* ${payload.message.trim()}`);
+    this.openUrl(lines.join('\n'));
+  }
+
+  openTrialBooking(payload: TrialBookingPayload): void {
+    const lines = [
+      'Olá! Gostaria de agendar uma *Aula Experimental* na Power Shape Academia:',
+      '',
+      `• *Nome:* ${payload.studentName}`,
+      `• *WhatsApp:* ${payload.studentPhone}`,
+      `• *Modalidade:* ${payload.modality}`,
+      `• *Dia/Horário:* ${payload.scheduleSlot}`,
+      payload.goal ? `• *Objetivo:* ${payload.goal}` : ''
+    ].filter(Boolean);
+
+    this.openUrl(lines.join('\n'));
+  }
+
+  private openUrl(message: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
     }
 
-    window.open(this.buildUrl(lines.join('\n')), '_blank', 'noopener,noreferrer');
+    const phone = SITE_CONFIG.whatsappNumber;
+    const encoded = encodeURIComponent(message);
+    window.open(`${this.baseUrl}/${phone}?text=${encoded}`, '_blank', 'noopener,noreferrer');
   }
 }

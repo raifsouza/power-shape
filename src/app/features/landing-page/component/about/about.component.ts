@@ -299,17 +299,17 @@ export class AboutComponent {
     {
       src: '/images/ambiente-1.jpeg',
       alt: 'Área de musculação da Power Shape Academia',
-      caption: 'Área completa de musculação de Superiores'
+      caption: 'Área completa de musculação de Inferiores'
     },
     {
       src: '/images/ambiente-2.jpeg',
       alt: 'Equipamentos de treino da Power Shape Academia',
-      caption: 'Equipamentos modernos e biomecânica precisa'
+      caption: 'Ambiete tranquilo e sempre organizado'
     },
     {
       src: '/images/ambiente-3.jpeg',
       alt: 'Espaço de aulas coletivas e funcional',
-      caption: 'Espaço dedicado às aulas coletivas e funcional'
+      caption: 'Área completa de musculação de Superiores'
     },
     // {
     //   src: '/images/ambiente-4.jpg',
@@ -326,7 +326,7 @@ export class AboutComponent {
   highlights = [
     'Equipamentos modernos e biomecânica precisa',
     'Acompanhamento próximo de profissionais qualificados',
-    'Ambiente climatizado, limpo e organizado',
+    'Ambiente limpo e organizado',
     'Estrutura pensada para treinos de força e hipertrofia'
   ];
 

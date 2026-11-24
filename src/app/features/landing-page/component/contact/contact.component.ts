@@ -6,6 +6,7 @@ import { PrimaryButtonComponent } from '../../../../shared/components/primary-bu
 import { SITE_CONFIG } from '../../../../core/config/site-config';
 import { WhatsappService } from '../../../../core/services/whatsapp.service';
 import { PLANS_DATA } from '../../data/plans.data';
+import { AnalyticsService } from '../../../../core/services/analytics.service';
 
 @Component({
   selector: 'app-contact',
@@ -259,7 +260,7 @@ import { PLANS_DATA } from '../../data/plans.data';
 export class ContactComponent {
   private readonly fb = inject(FormBuilder);
   private readonly whatsappService = inject(WhatsappService);
-
+  private readonly analytics = inject(AnalyticsService);
   config = SITE_CONFIG;
   plans = PLANS_DATA;
 
@@ -276,11 +277,13 @@ export class ContactComponent {
   }
 
   onSubmit(): void {
+
     if (this.interestForm.invalid) {
       this.interestForm.markAllAsTouched();
       return;
     }
-
-    this.whatsappService.openFormSubmission(this.interestForm.getRawValue());
+    const formValue = this.interestForm.getRawValue();
+    this.analytics.trackContactFormSubmitted(formValue.planName);
+    this.whatsappService.openFormSubmission(formValue);
   }
 }

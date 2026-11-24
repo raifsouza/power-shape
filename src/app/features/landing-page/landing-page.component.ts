@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from './component/header.component';
 import { FooterComponent } from './component/footer/footer.component';
 import { WhatsappButtonComponent } from './component/whatsapp-button.component';
@@ -11,6 +11,8 @@ import { PlansComponent } from './component/plans/plans.component';
 import { TestimonialsComponent } from './component/testimonials/testimonials.component';
 import { ContactComponent } from './component/contact/contact.component';
 import { GroupClassesComponent } from './component/group-classes/group-classes.component';
+import { TrialBookingModalComponent } from './component/trial-booking-modal/trial-booking-modal.component';
+import { SeoService } from '../../core/services/seo.service';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
@@ -26,6 +28,7 @@ import { GroupClassesComponent } from './component/group-classes/group-classes.c
     ContactComponent,
     FooterComponent,
     WhatsappButtonComponent,
+    TrialBookingModalComponent,
     GroupClassesComponent
 ],
   template: `
@@ -43,6 +46,15 @@ import { GroupClassesComponent } from './component/group-classes/group-classes.c
     </main>
     <app-footer></app-footer>
     <app-whatsapp-button></app-whatsapp-button>
+    <app-trial-booking-modal></app-trial-booking-modal>
   `
 })
-export class LandingPageComponent {}
+export class LandingPageComponent implements OnInit{
+  private readonly seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.configureLandingPageSeo();
+  }
+
+  
+}

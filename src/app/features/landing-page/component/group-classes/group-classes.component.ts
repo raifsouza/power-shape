@@ -4,6 +4,7 @@ import { SectionTitleComponent } from '../../../../shared/components/section-tit
 import { PrimaryButtonComponent } from '../../../../shared/components/primary-button.component';
 import { GROUP_CLASSES_DATA } from '../../data/group-classes.data';
 import { WhatsappService } from '../../../../core/services/whatsapp.service';
+import { TrialModalService } from '../../../../core/services/trial-modal.service';
 
 @Component({
   selector: 'app-group-classes',
@@ -187,10 +188,11 @@ import { WhatsappService } from '../../../../core/services/whatsapp.service';
   `]
 })
 export class GroupClassesComponent {
-  private readonly whatsappService = inject(WhatsappService);
-  classes = GROUP_CLASSES_DATA;
 
+  private readonly trialModal = inject(TrialModalService);
+  classes = GROUP_CLASSES_DATA;
+  
   askAboutClass(className: string): void {
-    this.whatsappService.openPlanInquiry(`Aula de ${className}`);
+  this.trialModal.open(className);
   }
 }
