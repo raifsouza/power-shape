@@ -5,6 +5,7 @@ export interface Plan {
   periodicity: string;
   description?: string;
   benefits: string[];
+  observation?: string;
   highlighted?: boolean;
   badgeText?: string;
 }

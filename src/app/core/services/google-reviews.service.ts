@@ -16,7 +16,15 @@ interface GooglePlaceReview {
 }
 
 interface PlaceDetailsResponse {
+  rating?: number;
+  userRatingCount?: number;
   reviews?: GooglePlaceReview[];
+}
+
+export interface GoogleReviewsSummary {
+  rating?: number;
+  userRatingCount?: number;
+  testimonials: Testimonial[];
 }
 
 @Injectable({
@@ -25,39 +33,42 @@ interface PlaceDetailsResponse {
 export class GoogleReviewsService {
   private readonly http = inject(HttpClient);
 
-  getTopReviews(): Observable<Testimonial[]> {
+  getTopReviews(): Observable<GoogleReviewsSummary> {
     const { placeId, apiKey } = SITE_CONFIG.googleReviews;
+
+    if (!placeId || !apiKey || placeId === 'ChIJYzl-f_iLpJIRkVOk-C_BPS4') {
+      return of({ testimonials: TESTIMONIALS_DATA });
+    }
+
     const url = `https://places.googleapis.com/v1/places/${placeId}?languageCode=pt-BR`;
-
-    console.log('1. URL montada:', url);
-
     const headers = new HttpHeaders({
       'X-Goog-Api-Key': apiKey,
-      'X-Goog-FieldMask': 'reviews'
+      'X-Goog-FieldMask': 'rating,userRatingCount,reviews'
     });
 
-    console.log('2. Disparando HTTP GET agora...');
-
     return this.http.get<PlaceDetailsResponse>(url, { headers }).pipe(
+      
       map(response => {
-        console.log('3. Resposta recebida do Google:', response);
+        console.log('Reviews retornadas pela API:', response.reviews);
+        console.log('Resposta completa:', response);
         const filtered = (response.reviews ?? [])
-          .filter(review => review.rating >= 4 && !!review.text?.text)
+          .filter(review => review.rating >= 4 && !!review.text?.text?.trim())
           .map((review, index): Testimonial & { rating?: number } => ({
             id: `google-${index}`,
             studentName: review.authorAttribution?.displayName ?? 'Aluno Power Shape',
-            text: review.text!.text,
+            text: review.text!.text.trim(),
             avatarUrl: review.authorAttribution?.photoUri,
             resultTimeframe: review.relativePublishTimeDescription ?? 'Avaliação no Google',
             rating: review.rating
           }));
-
-        return filtered.length > 0 ? filtered : TESTIMONIALS_DATA;
+          console.log('Reviews após filtro >= 4:', filtered);
+        return {
+          rating: response.rating,
+          userRatingCount: response.userRatingCount,
+          testimonials: filtered.length > 0 ? filtered : TESTIMONIALS_DATA
+        };
       }),
-      catchError((err) => {
-        console.error('4. Erro na chamada HTTP:', err);
-        return of(TESTIMONIALS_DATA);
-      })
+      catchError(() => of({ testimonials: TESTIMONIALS_DATA }))
     );
   }
 }

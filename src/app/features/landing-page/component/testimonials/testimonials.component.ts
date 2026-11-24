@@ -153,10 +153,14 @@ export class TestimonialsComponent implements OnInit {
 
   testimonials = signal<Testimonial[]>([]);
   googleProfileUrl = SITE_CONFIG.googleReviews.googleProfileUrl;
+ googleRating = signal<number | undefined>(undefined);
+  googleTotalCount = signal<number | undefined>(undefined);
 
   ngOnInit(): void {
-    this.googleReviewsService.getTopReviews().subscribe(data => {
-      this.testimonials.set(data);
+    this.googleReviewsService.getTopReviews().subscribe(result => {
+      this.googleRating.set(result.rating);
+      this.googleTotalCount.set(result.userRatingCount);
+      this.testimonials.set(result.testimonials);
     });
   }
 

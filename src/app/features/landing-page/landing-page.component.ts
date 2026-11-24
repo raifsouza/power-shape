@@ -10,7 +10,7 @@ import { ServicesComponent } from './component/services/services.component';
 import { PlansComponent } from './component/plans/plans.component';
 import { TestimonialsComponent } from './component/testimonials/testimonials.component';
 import { ContactComponent } from './component/contact/contact.component';
-
+import { GroupClassesComponent } from './component/group-classes/group-classes.component';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
@@ -25,8 +25,9 @@ import { ContactComponent } from './component/contact/contact.component';
     TestimonialsComponent,
     ContactComponent,
     FooterComponent,
-    WhatsappButtonComponent
-  ],
+    WhatsappButtonComponent,
+    GroupClassesComponent
+],
   template: `
     <app-header></app-header>
     <main>
@@ -35,6 +36,7 @@ import { ContactComponent } from './component/contact/contact.component';
       <app-academy-gallery></app-academy-gallery>
       <app-student-results></app-student-results>
       <app-services></app-services>
+      <app-group-classes></app-group-classes>
       <app-plans></app-plans>
       <app-testimonials></app-testimonials>
       <app-contact></app-contact>
